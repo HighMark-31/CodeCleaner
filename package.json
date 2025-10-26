@@ -1,0 +1,199 @@
+{
+  "name": "codecleaner",
+  "displayName": "Clean Code - Remove Comments, Emojis & manage them",
+  "description": "Quickly remove unwanted comments, emojis from your source code in any language. Perfect for code reviews, minification, or cleaning legacy files.",
+    "icon": "logo.png",
+  "version": "1.0.0",
+  "publisher": "HighMark-IT",
+  "author": {
+    "name": "HighMark IT [Marco N.]",
+    "url": "https://codecleaner.highmark.it"
+  },
+  "homepage": "https://codecleaner.highmark.it",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/highmark-it/code-cleaner"
+  },
+  "bugs": {
+    "url": "https://github.com/highmark-it/code-cleaner/issues"
+  },
+"keywords": [
+  "clean code",
+  "remove comments",
+  "delete emojis",
+  "code cleanup",
+  "comment remover",
+  "emoji remover",
+  "code minifier",
+  "developer productivity"
+  ],
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "activationEvents": [
+      "onCommand:codecleaner.findInlineComments",
+      "onCommand:codecleaner.findMultilineComments",
+      "onCommand:codecleaner.findEmojis",
+      "onCommand:codecleaner.removeInlineComments",
+      "onCommand:codecleaner.removeMultilineComments",
+      "onCommand:codecleaner.removeEmojis",
+      "onCommand:codecleaner.navigateNext",
+      "onCommand:codecleaner.clearHighlights"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+      "commands": [
+        {
+          "command": "codecleaner.findInlineComments",
+          "title": "Code Cleaner: Find Inline Comments"
+        },
+        {
+          "command": "codecleaner.findMultilineComments",
+          "title": "Code Cleaner: Find Multiline Comments"
+        },
+        {
+          "command": "codecleaner.findEmojis",
+          "title": "Code Cleaner: Find Emojis"
+        },
+        {
+          "command": "codecleaner.removeInlineComments",
+          "title": "Code Cleaner: Remove Inline Comments"
+        },
+        {
+          "command": "codecleaner.removeMultilineComments",
+          "title": "Code Cleaner: Remove Multiline Comments"
+        },
+        {
+          "command": "codecleaner.removeEmojis",
+          "title": "Code Cleaner: Remove Emojis"
+        },
+        {
+          "command": "codecleaner.navigateNext",
+          "title": "Code Cleaner: Navigate to Next Match"
+        },
+        {
+          "command": "codecleaner.clearHighlights",
+          "title": "Code Cleaner: Clear Highlights"
+        }
+      ],
+      "menus": {
+        "editor/context": [
+          {
+            "when": "editorHasInlineComments",
+            "command": "codecleaner.findInlineComments",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasMultilineComments",
+            "command": "codecleaner.findMultilineComments",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasEmojis",
+            "command": "codecleaner.findEmojis",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasInlineComments",
+            "command": "codecleaner.removeInlineComments",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasMultilineComments",
+            "command": "codecleaner.removeMultilineComments",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasEmojis",
+            "command": "codecleaner.removeEmojis",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasMatches",
+            "command": "codecleaner.navigateNext",
+            "group": "codeCleaner"
+          },
+          {
+            "when": "editorHasHighlights",
+            "command": "codecleaner.clearHighlights",
+            "group": "codeCleaner"
+          }
+        ],
+        "explorer/context": [
+          {
+            "submenu": "codecleaner.submenu",
+            "group": "codeCleaner"
+          }
+        ],
+        "commandPalette": [
+          {
+            "command": "codecleaner.findInlineComments",
+            "when": "false"
+          },
+          {
+            "command": "codecleaner.findMultilineComments",
+            "when": "false"
+          },
+          {
+            "command": "codecleaner.findEmojis",
+            "when": "false"
+          },
+          {
+            "command": "codecleaner.removeInlineComments",
+            "when": "false"
+          },
+          {
+            "command": "codecleaner.removeMultilineComments",
+            "when": "false"
+          },
+          {
+            "command": "codecleaner.removeEmojis",
+            "when": "false"
+          }
+        ]
+      },
+      "submenus": [
+        {
+          "id": "codecleaner.submenu",
+          "label": "Code Cleaner"
+        }
+      ],
+    "keybindings": [
+      {
+        "command": "codecleaner.navigateNext",
+        "key": "enter",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "codecleaner.clearHighlights",
+        "key": "escape",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "14.x",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
+    "glob": "^7.1.7",
+    "mocha": "^8.4.0",
+    "typescript": "^4.3.2",
+    "vscode-test": "^1.5.2"
+  }
+}
