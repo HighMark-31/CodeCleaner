@@ -3,7 +3,7 @@
   "displayName": "Clean Code - Remove Comments, Emojis & manage them",
   "description": "Quickly remove unwanted comments, emojis from your source code in any language. Perfect for code reviews, minification, or cleaning legacy files.",
     "icon": "logo.png",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "HighMark-IT",
   "author": {
     "name": "HighMark IT [Marco N.]",
@@ -83,44 +83,38 @@
       "menus": {
         "editor/context": [
           {
-            "when": "editorHasInlineComments",
             "command": "codecleaner.findInlineComments",
-            "group": "codeCleaner"
+            "group": "codeCleaner@1"
           },
           {
-            "when": "editorHasMultilineComments",
             "command": "codecleaner.findMultilineComments",
-            "group": "codeCleaner"
+            "group": "codeCleaner@2"
           },
           {
-            "when": "editorHasEmojis",
             "command": "codecleaner.findEmojis",
-            "group": "codeCleaner"
+            "group": "codeCleaner@3"
           },
           {
-            "when": "editorHasInlineComments",
             "command": "codecleaner.removeInlineComments",
-            "group": "codeCleaner"
+            "group": "codeCleaner@4"
           },
           {
-            "when": "editorHasMultilineComments",
             "command": "codecleaner.removeMultilineComments",
-            "group": "codeCleaner"
+            "group": "codeCleaner@5"
           },
           {
-            "when": "editorHasEmojis",
             "command": "codecleaner.removeEmojis",
-            "group": "codeCleaner"
+            "group": "codeCleaner@6"
           },
           {
-            "when": "editorHasMatches",
+            "when": "codeCleanerNavigationActive",
             "command": "codecleaner.navigateNext",
-            "group": "codeCleaner"
+            "group": "codeCleaner@7"
           },
           {
-            "when": "editorHasHighlights",
+            "when": "codeCleanerNavigationActive",
             "command": "codecleaner.clearHighlights",
-            "group": "codeCleaner"
+            "group": "codeCleaner@8"
           }
         ],
         "explorer/context": [
@@ -132,27 +126,27 @@
         "commandPalette": [
           {
             "command": "codecleaner.findInlineComments",
-            "when": "false"
+            "when": "true"
           },
           {
             "command": "codecleaner.findMultilineComments",
-            "when": "false"
+            "when": "true"
           },
           {
             "command": "codecleaner.findEmojis",
-            "when": "false"
+            "when": "true"
           },
           {
             "command": "codecleaner.removeInlineComments",
-            "when": "false"
+            "when": "true"
           },
           {
             "command": "codecleaner.removeMultilineComments",
-            "when": "false"
+            "when": "true"
           },
           {
             "command": "codecleaner.removeEmojis",
-            "when": "false"
+            "when": "true"
           }
         ]
       },
@@ -166,12 +160,12 @@
       {
         "command": "codecleaner.navigateNext",
         "key": "enter",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus && codeCleanerNavigationActive"
       },
       {
         "command": "codecleaner.clearHighlights",
         "key": "escape",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus && codeCleanerNavigationActive"
       }
     ]
   },

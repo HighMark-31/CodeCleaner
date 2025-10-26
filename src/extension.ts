@@ -20,6 +20,10 @@ let isNavigationActive = false;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Code Cleaner is now active!');
+    
+    vscode.commands.executeCommand('setContext', 'codeCleanerNavigationActive', false);
+    
+    updateEditorContext();
 
     let findInline = vscode.commands.registerCommand('codecleaner.findInlineComments', () => {
         const editor = vscode.window.activeTextEditor;
@@ -157,6 +161,16 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    let onDidChangeActiveTextEditor = vscode.window.onDidChangeActiveTextEditor(() => {
+        updateEditorContext();
+    });
+
+    let onDidChangeTextDocument = vscode.workspace.onDidChangeTextDocument((event) => {
+        if (event.document === vscode.window.activeTextEditor?.document) {
+            updateEditorContext();
+        }
+    });
+
     context.subscriptions.push(
         findInline,
         findMultiline,
@@ -166,7 +180,9 @@ export function activate(context: vscode.ExtensionContext) {
         removeInline,
         removeMultiline,
         removeEmojisCmd,
-        onDidChangeTextEditorSelection
+        onDidChangeTextEditorSelection,
+        onDidChangeActiveTextEditor,
+        onDidChangeTextDocument
     );
 }
 
@@ -184,6 +200,27 @@ function isInsideRegex(text: string, position: number): boolean {
     while ((match = newRegexPattern.exec(text)) !== null) {
         if (position >= match.index && position < match.index + match[0].length) {
             return true;
+        }
+    }
+    
+    return false;
+}
+
+function isInsideUrl(text: string, position: number): boolean {
+    const urlPatterns = [
+        /https?:\/\/[^\s<>"{}|\\^`\[\]]+/g,
+        /ftp:\/\/[^\s<>"{}|\\^`\[\]]+/g,
+        /file:\/\/[^\s<>"{}|\\^`\[\]]+/g,
+        /[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s<>"{}|\\^`\[\]]+/g
+    ];
+    
+    for (const pattern of urlPatterns) {
+        pattern.lastIndex = 0;
+        let match;
+        while ((match = pattern.exec(text)) !== null) {
+            if (position >= match.index && position < match.index + match[0].length) {
+                return true;
+            }
         }
     }
     
@@ -266,6 +303,8 @@ function startNavigation(editor: vscode.TextEditor, matches: (CommentMatch | Emo
     currentMatchIndex = -1;
     isNavigationActive = true;
     
+    vscode.commands.executeCommand('setContext', 'codeCleanerNavigationActive', true);
+    
     if (matches.length > 0) {
         if ('text' in matches[0]) {
             highlightMatches(editor, matches as CommentMatch[]);
@@ -273,6 +312,8 @@ function startNavigation(editor: vscode.TextEditor, matches: (CommentMatch | Emo
             highlightEmojiMatches(editor, matches as EmojiMatch[]);
         }
     }
+    
+    updateEditorContext();
 }
 
 function navigateToMatch(editor: vscode.TextEditor, match: CommentMatch | EmojiMatch) {
@@ -282,14 +323,17 @@ function navigateToMatch(editor: vscode.TextEditor, match: CommentMatch | EmojiM
 }
 
 function clearNavigation() {
-    isNavigationActive = false;
     currentMatches = [];
     currentMatchIndex = -1;
-    
+    isNavigationActive = false;
+    vscode.commands.executeCommand('setContext', 'codeCleanerNavigationActive', false);
+
     const editor = vscode.window.activeTextEditor;
     if (editor) {
         editor.setDecorations(decorationType, []);
     }
+    
+    updateEditorContext();
 }
 
 function findInlineComments(document: vscode.TextDocument): CommentMatch[] {
@@ -317,7 +361,7 @@ function findInlineComments(document: vscode.TextDocument): CommentMatch[] {
                 const absoluteStart = document.offsetAt(new vscode.Position(i, startChar));
                 const charInOriginal = textWithoutMultiline[absoluteStart];
                 
-                if (charInOriginal !== ' ' && !isInsideRegex(lineText, startChar)) {
+                if (charInOriginal !== ' ' && !isInsideRegex(lineText, startChar) && !isInsideUrl(lineText, startChar)) {
                     matches.push({
                         line: i,
                         startChar,
@@ -487,6 +531,34 @@ async function removeEmojisCustom(editor: vscode.TextEditor, matches: EmojiMatch
     });
 
     vscode.window.showInformationMessage(`${matches.length} emojis replaced`);
+}
+
+function updateEditorContext() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        vscode.commands.executeCommand('setContext', 'editorHasInlineComments', false);
+        vscode.commands.executeCommand('setContext', 'editorHasMultilineComments', false);
+        vscode.commands.executeCommand('setContext', 'editorHasEmojis', false);
+        vscode.commands.executeCommand('setContext', 'editorHasMatches', false);
+        vscode.commands.executeCommand('setContext', 'editorHasHighlights', false);
+        return;
+    }
+
+    const document = editor.document;
+    
+    const inlineComments = findInlineComments(document);
+    vscode.commands.executeCommand('setContext', 'editorHasInlineComments', inlineComments.length > 0);
+    
+    const multilineComments = findMultilineComments(document);
+    vscode.commands.executeCommand('setContext', 'editorHasMultilineComments', multilineComments.length > 0);
+    
+    const emojis = findEmojis(document);
+    vscode.commands.executeCommand('setContext', 'editorHasEmojis', emojis.length > 0);
+    
+    const hasMatches = currentMatches.length > 0;
+    vscode.commands.executeCommand('setContext', 'editorHasMatches', hasMatches);
+    
+    vscode.commands.executeCommand('setContext', 'editorHasHighlights', isNavigationActive);
 }
 
 export function deactivate() {}
