@@ -3,7 +3,7 @@
   "displayName": "Clean Code - Remove Comments, Emojis & manage them",
   "description": "Quickly remove unwanted comments, emojis from your source code in any language. Perfect for code reviews, minification, or cleaning legacy files.",
     "icon": "logo.png",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "HighMark-IT",
   "author": {
     "name": "HighMark IT [Marco N.]",
@@ -12,10 +12,10 @@
   "homepage": "https://codecleaner.highmark.it",
   "repository": {
     "type": "git",
-    "url": "https://github.com/highmark-it/code-cleaner"
+    "url": "https://github.com/HighMark-31/CodeCleaner"
   },
   "bugs": {
-    "url": "https://github.com/highmark-it/code-cleaner/issues"
+    "url": "https://github.com/HighMark-31/CodeCleaner/issues"
   },
 "keywords": [
   "clean code",
