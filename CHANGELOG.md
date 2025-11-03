@@ -18,3 +18,8 @@ All notable changes to the "Code Cleaner" extension will be documented in this f
 
 ### Fixed
 - Improved regex precision to avoid false positives in URL
+
+## [1.0.2] - 03-11-2025
+
+### Fixed
+- Fixed an issue that the github link was not working
