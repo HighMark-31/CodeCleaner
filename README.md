@@ -5,6 +5,7 @@ Clean your source code by automatically removing unwanted **inline comments**, *
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Publisher](https://img.shields.io/badge/publisher-highmark--it-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=HighMark-31.CodeCleaner)
 
 **Code Cleaner** is a powerful and versatile extension for Visual Studio Code designed to help you quickly clean your code of unwanted comments and emojis, improving the readability and maintainability of your source code.
 
